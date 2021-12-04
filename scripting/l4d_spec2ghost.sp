@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION 		"1.3"
+#define PLUGIN_VERSION 		"1.4"
 
 /*======================================================================================
 	Plugin Info:
@@ -31,6 +31,11 @@
 
 ========================================================================================
 	Change Log:
+
+1.4 (04-Dec-2021)
+	- Minor change to code to fix a bad coding practice.
+	- The stuck method test no longer requires Left4DHooks and defaults to the games selected spawn position if they are stuck.
+	- The method for finding a nearby valid area still requires Left4DHooks.
 
 1.3 (28-Apr-2021)
 	- Optionally uses Left4DHooks 1.36+ to detect if a players stuck and finds a valid area nearby. Thanks to "Voevoda" for reporting and testing.
@@ -188,7 +193,7 @@ public void OnMapEnd()
 
 public void OnMapStart()
 {
-	// g_bFinale = FindEntityByClassname(MaxClients + 1, "trigger_finale") != INVALID_ENT_REFERENCE;
+	// g_bFinale = FindEntityByClassname(-1, "trigger_finale") != INVALID_ENT_REFERENCE;
 
 	if( g_iLateLoad )
 		for( int i = 1; i <= MaxClients; i++ )
@@ -263,6 +268,11 @@ bool IsClientStuck(int client)
 				tries = 0;
 				break;
 			}
+		}
+	} else {
+		if( TraceClientStuck(client, g_vPos[client]) != -1 )
+		{
+			return true;
 		}
 	}
 
