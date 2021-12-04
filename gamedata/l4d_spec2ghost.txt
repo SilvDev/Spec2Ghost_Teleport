@@ -1,0 +1,28 @@
+"Games"
+{
+	"left4dead"
+	{
+		"Offsets"
+		{
+			"CTerrorPlayer_OnEnterGhostState"
+			{
+				"windows"	"510"
+				"linux"		"513"
+				"mac"		"513"
+			}
+		}
+	}
+
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			"CTerrorPlayer_OnEnterGhostState"
+			{
+				"windows"	"536"
+				"linux"		"537"
+				"mac"		"537"
+			}
+		}
+	}
+}
