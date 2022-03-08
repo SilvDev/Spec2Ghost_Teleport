@@ -1,6 +1,6 @@
 /*
 *	Spec2Ghost Teleport
-*	Copyright (C) 2021 Silvers
+*	Copyright (C) 2022 Silvers
 *
 *	This program is free software: you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION 		"1.4"
+#define PLUGIN_VERSION 		"1.5"
 
 /*======================================================================================
 	Plugin Info:
@@ -31,6 +31,9 @@
 
 ========================================================================================
 	Change Log:
+
+1.5 (08-Mar-2022)
+	- Plugin now teleports to the same eye angles. Thanks to "Eyal282" for reporting.
 
 1.4 (04-Dec-2021)
 	- Minor change to code to fix a bad coding practice.
@@ -86,6 +89,7 @@ bool g_bLeft4DHooks;
 
 Handle g_hOnLeaveGhost;
 float g_vPos[MAXPLAYERS+1][3];
+float g_vAng[MAXPLAYERS+1][3];
 int g_iStart[MAXPLAYERS+1];
 int g_iLateLoad;
 // bool g_bFinale;
@@ -221,6 +225,7 @@ public MRESReturn OnLeaveGhost(int client)
 	}
 
 	GetClientAbsOrigin(client, g_vPos[client]);
+	GetClientEyeAngles(client, g_vAng[client]);
 	RequestFrame(OnFrame_Teleport, GetClientUserId(client));
 
 	return MRES_Ignored;
@@ -232,7 +237,7 @@ void OnFrame_Teleport(int client)
 	{
 		if( IsClientStuck(client) == false )
 		{
-			TeleportEntity(client, g_vPos[client], NULL_VECTOR, NULL_VECTOR);
+			TeleportEntity(client, g_vPos[client], g_vAng[client], NULL_VECTOR);
 		}
 	}
 }
@@ -296,7 +301,7 @@ public bool TraceRayCallback(int entity, int mask)
 	if( entity > MaxClients && IsValidEntity(entity) )
 	{
 		static char sTemp[10];
-		GetEdictClassname(entity, sTemp, sizeof(sTemp));
+		GetEntityClassname(entity, sTemp, sizeof(sTemp));
 
 		if( strncmp(sTemp, "trigger_", 8) == 0 )
 			return false;
