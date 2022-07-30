@@ -32,6 +32,9 @@
 ========================================================================================
 	Change Log:
 
+1.5a (30-Jul-2022)
+	- Recompiled against SourceMod version 1.11 and Left4DHooks version 1.111. Thanks to "Hawkins" for reporting error messages with Left4DHooks version 1.110.
+
 1.5 (08-Mar-2022)
 	- Plugin now teleports to the same eye angles. Thanks to "Eyal282" for reporting.
 
@@ -83,7 +86,7 @@
 // #include <left4dhooks>
 // Left4DHooks natives - optional - (added here to avoid requiring Left4DHooks include)
 native void L4D_FindRandomSpot(int NavArea, float vecPos[3]);
-native int L4D_GetNearestNavArea(const float vecPos[3]);
+native any L4D_GetNearestNavArea(const float vecPos[3], float maxDist = 300.0, bool anyZ = false, bool checkLOS = false, bool checkGround = false, int teamID = 2);
 native bool L4D_GetRandomPZSpawnPosition(int client, int zombieClass, int attempts, float vecPos[3]);
 bool g_bLeft4DHooks;
 
@@ -171,19 +174,19 @@ public void OnPluginStart()
 // ==================================================
 // 					EVENTS
 // ==================================================
-public Action CmdStuckTest(int client, int args)
+Action CmdStuckTest(int client, int args)
 {
 	IsClientStuck(client);
 	return Plugin_Handled;
 }
 
-public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
+void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	g_iStart[client] = 1;
 }
 
-public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	for( int i = 1; i <= MaxClients; i++ )
 		g_iStart[i] = 1;
@@ -216,7 +219,7 @@ public void OnClientPutInServer(int client)
 // ==================================================
 // 					DETOUR
 // ==================================================
-public MRESReturn OnLeaveGhost(int client)
+MRESReturn OnLeaveGhost(int client)
 {
 	if( g_iStart[client] )
 	{
@@ -295,7 +298,7 @@ int TraceClientStuck(int client, float vPos[3])
 	return TR_GetEntityIndex();
 }
 
-public bool TraceRayCallback(int entity, int mask)
+bool TraceRayCallback(int entity, int mask)
 {
 	// Ignore hitting triggers
 	if( entity > MaxClients && IsValidEntity(entity) )
