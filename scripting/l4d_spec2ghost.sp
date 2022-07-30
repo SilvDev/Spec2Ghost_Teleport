@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION 		"1.5"
+#define PLUGIN_VERSION 		"1.6"
 
 /*======================================================================================
 	Plugin Info:
@@ -32,7 +32,7 @@
 ========================================================================================
 	Change Log:
 
-1.5a (30-Jul-2022)
+1.6 (30-Jul-2022)
 	- Recompiled against SourceMod version 1.11 and Left4DHooks version 1.111. Thanks to "Hawkins" for reporting error messages with Left4DHooks version 1.110.
 
 1.5 (08-Mar-2022)
